@@ -170,7 +170,10 @@ class TextOnly(Dataset):
         return len(self.captions)
 
     def __getitem__(self, index):
-        dummy_im = torch.zeros(3, self.output_size, self.output_size)
+        if isinstance(self.output_size, int):
+            dummy_im = torch.zeros(3, self.output_size, self.output_size)
+        else:
+            dummy_im = torch.zeros(3, self.output_size[0], self.output_size[1])
         dummy_im = rearrange(dummy_im * 2. - 1., 'c h w -> h w c')
         return {self.image_key: dummy_im, self.caption_key: self.captions[index]}
 
