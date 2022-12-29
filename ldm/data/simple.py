@@ -10,6 +10,8 @@ from torchvision import transforms
 from einops import rearrange
 from ldm.util import instantiate_from_config
 from datasets import load_dataset
+from datasets import Dataset, Image as DsImage
+
 
 def make_multi_folder_data(paths, caption_files=None, **kwargs):
     """Make a concat dataset from multiple folders
@@ -131,7 +133,7 @@ def hf_dataset(
     ):
     """Make huggingface dataset with appropriate list of transforms applied
     """
-    ds = load_dataset(name, split=split)
+    ds = load_dataset(name, split=split, use_auth_token=True).cast_column("image", DsImage())
     image_transforms = [instantiate_from_config(tt) for tt in image_transforms]
     image_transforms.extend([transforms.ToTensor(),
                                 transforms.Lambda(lambda x: rearrange(x * 2. - 1., 'c h w -> h w c'))])
@@ -150,7 +152,7 @@ def hf_dataset(
     return ds
 
 class TextOnly(Dataset):
-    def __init__(self, captions, output_size, image_key="image", caption_key="txt", n_gpus=1):
+    def __init__(self, captions, output_size, image_key="image", caption_key="txt", n_gpus=8):
         """Returns only captions with dummy images"""
         self.output_size = output_size
         self.image_key = image_key

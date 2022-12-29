@@ -13,7 +13,7 @@ from PIL import Image
 
 from pytorch_lightning import seed_everything
 from pytorch_lightning.trainer import Trainer
-from pytorch_lightning.callbacks import ModelCheckpoint, Callback, LearningRateMonitor
+from pytorch_lightning.callbacks import ModelCheckpoint, Callback, LearningRateMonitor, TQDMProgressBar
 from pytorch_lightning.utilities.distributed import rank_zero_only
 from pytorch_lightning.utilities import rank_zero_info
 
@@ -835,6 +835,7 @@ if __name__ == "__main__":
             from pytorch_lightning.trainer.connectors.checkpoint_connector import CheckpointConnector
             setattr(CheckpointConnector, "hpc_resume_path", None)
 
+        trainer_kwargs['accumulate_grad_batches'] = 1
         trainer = Trainer.from_argparse_args(trainer_opt, **trainer_kwargs)
         trainer.logdir = logdir  ###
 

@@ -82,7 +82,7 @@ data:
         image_transforms:
         - target: torchvision.transforms.Resize
           params:
-            size: 512
+            size: [704, 512]
             interpolation: 3
     validation:
       target: ldm.data.simple.TextOnly
@@ -92,8 +92,8 @@ data:
         - "A cute bunny rabbit"
         - "Yoda, a green creature."
         - "A snow covered card of an artifact with white border and a new-style layout showing a robot in front of a castle."
-        output_size: [715, 512]
-        n_gpus: 8 # small hack to sure we see all our samples
+        output_size: [704, 512]
+        # n_gpus: 8 # small hack to sure we see all our samples
 
 
 lightning:
